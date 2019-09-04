@@ -7,18 +7,93 @@ class DSList
 private:
 	struct Node
 	{
+		T 			_data;
+		Node*		_prev;
+		Node*		_next;
 
+		Node(const T& d = T{}, Node* prev = nullptr, Node* next = nullptr) :
+			_data{d}, _prev{prev}, _next{next}{ }
+
+		Node(T&& d, Node *prev = nullptr, Node* next = nullptr) :
+			_data{std::move(d)}, _prev(prve), _next(next){ }
 	};
 
 public:
 	class const_iterator
 	{
+	public:
+		const_iterator() : _current{nullptr}{ }
+		const T& operator*() const
+		{
+			return retrieve();
+		}
+		const_iterator& operator++()
+		{
+			_current = _current->_next;
+			return *this;
+		}
+		const_iterator& operator++(int)	//post
+		{
+			const_iterator old = *this;
+			++(*this);
+			return old;
+		}
 
+		bool operator==(const const_iterator& rhs) const
+		{
+			return _current = rhs._current;
+		}
+		bool operator!=(const const_iterator& rhs) const
+		{
+			return !((*this) == rhs);
+		}
+
+		
+	protected:
+		Node*		_current;
+
+		T& retrieve() const
+		{
+			return _current->_data;
+		}
+
+		const_iterator(Node* p) : _current(p){ }
+
+		friend class DSList<T>;
 	};
 
 	class iterator : public const_iterator
 	{
+		public:
+			iterator(){ }
 
+			T& operator*()
+			{
+				return const_iterator::retrieve();
+			}
+
+			const T& operator*() const
+			{
+				return const_iterator::retrieve();
+			}
+
+			iterator& operator++()
+			{
+				_current = _current->_next;
+				return *this;
+			}
+
+			iterator operator++(int)
+			{
+				iterator old = *this;
+				++(*this);
+				return old;
+			}
+
+		protected:
+			iterator(Node *p) : const_iterator(p){ }
+
+		friend class DSList<T>;
 	};
 
 public:
@@ -56,7 +131,16 @@ public:
 	iterator erase(iterator itr);
 	iterator erase(iterator from, iterator to);
 
-	void init();
+private:
+	void init()
+	{
+		_size = 0;
+
+		_head = new Node();
+		_tail = new Node();
+		_head->_next = _tail;
+		_tail->_prev = _head;
+	}
 
 private:
 	int			_size;
