@@ -8,8 +8,8 @@
 template<typename T>
 class DSVector
 {
-		template<typename T>
-		friend	void swap(DSVector<T>& left, DSVector<T>& right)
+	template<typename T>
+	friend	void swap(DSVector<T>& left, DSVector<T>& right)
 	{
 		using std::swap;
 		swap(left._size, right._size);
@@ -171,7 +171,7 @@ public:
 
 		for (int i = index; i < (_size - 1); ++i)
 		{
-			_array[index] = _array[index + 1];
+			_array[i] = _array[i + 1];
 		}
 		--_size;
 	}
