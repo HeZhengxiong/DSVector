@@ -9,7 +9,12 @@ template <typename T>
 class DSList
 {
 
-	friend void swap(DSList<T>& left, DSList<T>& right);
+	friend void swap(DSList<T>& left, DSList<T>& right)
+	{
+		std::swap(left._size, right._size);
+		std::swap(left._head, right._head);
+		std::swap(left._tail, right._tail);
+	}
 
 private:
 	struct Node
@@ -56,7 +61,7 @@ public:
 			return old;
 		}
 
-		const_iterator& operator++(int)	//post
+		const_iterator operator++(int)	//post
 		{
 			const_iterator old = *this;
 			++(*this);
@@ -140,12 +145,12 @@ public:
 		init();
 	}
 
-	DSList(const DSList& rhs) : _head(new Node()), _tail(new Node()), _size(0)
+	DSList(const DSList& rhs) : DSList()
 	{
 		auto ptr = rhs.begin();
 		while (ptr != rhs.end())
 		{
-			push_back(*ptr);
+			push_back(*ptr++);
 		}
 	}
 
@@ -158,13 +163,12 @@ public:
 		_tail = nullptr;
 	}
 
-	DSList(DSList&& rhs)	
-	{
+	DSList(DSList&& rhs)	: DSList()	{
 		swap(*this, rhs);
 	}
 
 
-	DSList& operator=(DSList rhs) {
+	DSList& operator=(DSList rhs) noexcept {
 		swap(*this, rhs);
 		return *this;
 	}
@@ -317,15 +321,6 @@ private:
 	Node*		_head;
 	Node*		_tail;
 };
-
-
-template<typename T>
-void swap(DSList<T>& left, DSList<T>& right)
-{
-	std::swap(left._size, right._size);
-	std::swap(left._head, right._head);
-	std::swap(left._tail, right._tail);
-}
 
 
 template<typename T>
