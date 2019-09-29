@@ -3,6 +3,28 @@
 
 #include <string>
 #include "../ArrayQueue/ArrayQueue.hpp"
+#include "../ArrayStack/ArrayStack.hpp"
+#include <sstream>
+#include <stdexcept>
+
+bool isOperator(std::string ch)
+{
+	if (ch == "+" ||
+		ch == "-" ||
+		ch == "*" ||
+		ch == "/"
+		) 
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+
 template <typename T>
 class BinaryTree
 {
@@ -27,22 +49,22 @@ public:
 		//Node* no4Node = new Node("4");
 		//Node* no5Node = new Node("5");
 		//Node* no2Node = new Node("2", no4Node, no5Node);
-
 		//Node* no3Node = new Node("3");
 		//_root = new Node("1", no2Node, no3Node);
 
-		Node* node4 = new Node("4");
-		Node* node5 = new Node("5");
-		Node* node3 = new Node("3", node4, node5);
-		Node* node2 = new Node("2");
-		_root = new Node("1", node2, node3);
+		//Node* node4 = new Node("4");
+		//Node* node5 = new Node("5");
+		//Node* node3 = new Node("3", node4, node5);
+		//Node* node2 = new Node("2");
+		//_root = new Node("1", node2, node3);
+
+		initFromPostfix("a b + c d e + * *");
 	}
 
 	~BinaryTree()
 	{
 		clearNode(_root);
 	}
-
 
 	//Depth First Traversal
 	std::string postOrder()
@@ -101,6 +123,45 @@ public:
 		}
 
 		return str;
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// just for demonstration:  postfix string separated by space and assume 
+	// the expression is valid.
+	void initFromPostfix(const std::string& postfix)
+	{
+		std::string str;
+		std::istringstream isn(postfix);
+		
+		ArrayStack<Node*> as;
+
+		while (isn >> str)
+		{
+			if (isOperator(str))
+			{
+				Node* node2 = as.top();
+				as.pop();
+				Node* node1 = as.top();
+				as.pop();
+				
+				Node* node12operator = new Node(str, node1, node2);
+				as.push(node12operator);
+			}
+			else //is operand
+			{
+				Node* node = new Node(str, nullptr, nullptr);
+				as.push(node);
+			}
+		}
+
+		_root = as.top();
+		as.pop();
+		if (!as.isEmpty())
+		{
+			throw std::runtime_error("expression error");
+		}
+
 	}
 
 

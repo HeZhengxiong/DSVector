@@ -5,7 +5,7 @@ int main(int argc, char** argv)
 {
 	BinaryTree<std::string> tree;
 
-	//std::cout << "PreOrder: " << tree.preOrder() << std::endl;
+	std::cout << "PreOrder: " << tree.preOrder() << std::endl;
 	//std::cout << "PostOrder: " << tree.postOrder() << std::endl;
 	//std::cout << "InOrder: " << tree.inOrder() << std::endl;
 
